@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>番茄时钟 - 设置</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 状态栏样式 */
+        .status-bar {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        }
+        
+        /* 设置项样式 */
+        .setting-item {
+            transition: all 0.3s ease;
+        }
+        
+        .setting-item:hover {
+            background-color: #f8fafc;
+        }
+        
+        /* 开关按钮 */
+        .toggle-switch {
+            position: relative;
+            width: 48px;
+            height: 28px;
+            background-color: #e5e7eb;
+            border-radius: 14px;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .toggle-switch.active {
+            background-color: #10b981;
+        }
+        
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 24px;
+            height: 24px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .toggle-switch.active::after {
+            transform: translateX(20px);
+        }
+        
+        /* 滑块样式 */
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: linear-gradient(to right, #10b981 0%, #10b981 60%, #e5e7eb 60%, #e5e7eb 100%);
+            outline: none;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #10b981;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* 主题色块 */
+        .theme-color {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .theme-color.selected {
+            border-color: #ffffff;
+            box-shadow: 0 0 0 2px #10b981;
+        }
+        
+        /* 版本信息 */
+        .version-info {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+        }
+        
+        /* 滚动区域 */
+        .scroll-area {
+            height: calc(100vh - 160px);
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 overflow-hidden">
+    <!-- iOS 状态栏 -->
+    <div class="status-bar text-white px-4 py-2 flex justify-between items-center text-sm font-medium">
+        <div class="flex items-center space-x-1">
+            <span>9:41</span>
+        </div>
+        <div class="flex items-center space-x-1">
+            <i class="fas fa-signal text-xs"></i>
+            <i class="fas fa-wifi text-xs"></i>
+            <i class="fas fa-battery-three-quarters text-xs"></i>
+        </div>
+    </div>
+
+    <!-- 主要内容区域 -->
+    <div class="min-h-screen bg-gray-50">
+        <!-- 顶部导航 -->
+        <div class="bg-white shadow-sm pt-6 pb-4 px-6">
+            <div class="flex justify-between items-center">
+                <h1 class="text-gray-800 text-2xl font-bold">设置</h1>
+                <button class="text-gray-600 text-lg">
+                    <i class="fas fa-question-circle"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="scroll-area px-6 pb-6">
+            <!-- 用户信息 -->
+            <div class="mb-6 mt-6">
+                <div class="bg-white rounded-2xl p-6 shadow-sm">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-white text-2xl"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="text-lg font-semibold text-gray-800">番茄小助手</div>
+                            <div class="text-sm text-gray-500">已使用 32 天</div>
+                            <div class="text-xs text-green-500 mt-1">完成 156 个番茄钟</div>
+                        </div>
+                        <button class="text-gray-400">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 番茄钟设置 -->
+            <div class="mb-6">
+                <h3 class="text-gray-700 font-semibold mb-4 flex items-center">
+                    <i class="fas fa-tomato text-red-500 mr-2"></i>
+                    番茄钟设置
+                </h3>
+                
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm">
+                    <!-- 工作时长 -->
+                    <div class="setting-item p-4 border-b border-gray-100">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-gray-700 font-medium">工作时长</span>
+                            <span class="text-indigo-500 font-semibold">25 分钟</span>
+                        </div>
+                        <input type="range" min="15" max="45" value="25" class="slider">
+                        <div class="flex justify-between text-xs text-gray-400 mt-1">
+                            <span>15分钟</span>
+                            <span>45分钟</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 短休息时长 -->
+                    <div class="setting-item p-4 border-b border-gray-100">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-gray-700 font-medium">短休息时长</span>
+                            <span class="text-green-500 font-semibold">5 分钟</span>
+                        </div>
+                        <input type="range" min="3" max="15" value="5" class="slider">
+                        <div class="flex justify-between text-xs text-gray-400 mt-1">
+                            <span>3分钟</span>
+                            <span>15分钟</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 长休息时长 -->
+                    <div class="setting-item p-4 border-b border-gray-100">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="text-gray-700 font-medium">长休息时长</span>
+                            <span class="text-blue-500 font-semibold">15 分钟</span>
+                        </div>
+                        <input type="range" min="10" max="30" value="15" class="slider">
+                        <div class="flex justify-between text-xs text-gray-400 mt-1">
+                            <span>10分钟</span>
+                            <span>30分钟</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 长休息间隔 -->
+                    <div class="setting-item p-4">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-gray-700 font-medium">长休息间隔</span>
+                                <div class="text-xs text-gray-500">每几个番茄钟后进入长休息</div>
+                            </div>
+                            <span class="text-purple-500 font-semibold">4 个</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 通知设置 -->
+            <div class="mb-6">
+                <h3 class="text-gray-700 font-semibold mb-4 flex items-center">
+                    <i class="fas fa-bell text-yellow-500 mr-2"></i>
+                    通知设置
+                </h3>
+                
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm">
+                    <!-- 声音提醒 -->
+                    <div class="setting-item p-4 border-b border-gray-100">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-gray-700 font-medium">声音提醒</span>
+                                <div class="text-xs text-gray-500">番茄钟结束时播放提示音</div>
+                            </div>
+                            <div class="toggle-switch active"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 振动提醒 -->
+                    <div class="setting-item p-4 border-b border-gray-100">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-gray-700 font-medium">振动提醒</span>
+                                <div class="text-xs text-gray-500">设备震动提醒</div>
+                            </div>
+                            <div class="toggle-switch active"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 推送通知 -->
+                    <div class="setting-item p-4 border-b border-gray-100">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-gray-700 font-medium">推送通知</span>
+                                <div class="text-xs text-gray-500">显示通知栏消息</div>
+                            </div>
+                            <div class="toggle-switch"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 提醒音选择 -->
+                    <div class="setting-item p-4">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-gray-700 font-medium">提醒音</span>
+                                <div class="text-xs text-gray-500">选择喜欢的提示音</div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-indigo-500 text-sm">清脆铃声</span>
+                                <i class="fas fa-chevron-right text-gray-400"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 主题设置 -->
+            <div class="mb-6">
+                <h3 class="text-gray-700 font-semibold mb-4 flex items-center">
+                    <i class="fas fa-palette text-pink-500 mr-2"></i>
+                    主题设置
+                </h3>
+                
+                <div class="bg-white rounded-2xl p-4 shadow-sm">
+                    <!-- 主题色选择 -->
+                    <div class="mb-4">
+                        <span class="text-gray-700 font-medium mb-3 block">主题色</span>
+                        <div class="flex space-x-3">
+                            <div class="theme-color selected" style="background: linear-gradient(135deg, #ff6b6b, #ee5a24);"></div>
+                            <div class="theme-color" style="background: linear-gradient(135deg, #4f46e5, #7c3aed);"></div>
+                            <div class="theme-color" style="background: linear-gradient(135deg, #10b981, #059669);"></div>
+                            <div class="theme-color" style="background: linear-gradient(135deg, #f59e0b, #d97706);"></div>
+                            <div class="theme-color" style="background: linear-gradient(135deg, #ec4899, #be185d);"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 深色模式 -->
+                    <div class="setting-item py-3 border-t border-gray-100">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-gray-700 font-medium">深色模式</span>
+                                <div class="text-xs text-gray-500">跟随系统设置</div>
+                            </div>
+                            <div class="toggle-switch"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 数据与隐私 -->
+            <div class="mb-6">
+                <h3 class="text-gray-700 font-semibold mb-4 flex items-center">
+                    <i class="fas fa-shield-alt text-green-500 mr-2"></i>
+                    数据与隐私
+                </h3>
+                
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm">
+                    <!-- 数据备份 -->
+                    <div class="setting-item p-4 border-b border-gray-100">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-gray-700 font-medium">iCloud 同步</span>
+                                <div class="text-xs text-gray-500">自动备份数据到 iCloud</div>
+                            </div>
+                            <div class="toggle-switch active"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 导出数据 -->
+                    <div class="setting-item p-4 border-b border-gray-100">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-gray-700 font-medium">导出数据</span>
+                                <div class="text-xs text-gray-500">导出统计数据为 CSV 文件</div>
+                            </div>
+                            <i class="fas fa-chevron-right text-gray-400"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- 清除数据 -->
+                    <div class="setting-item p-4">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-red-500 font-medium">清除所有数据</span>
+                                <div class="text-xs text-gray-500">删除所有本地数据，无法恢复</div>
+                            </div>
+                            <i class="fas fa-chevron-right text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 关于 -->
+            <div class="mb-6">
+                <h3 class="text-gray-700 font-semibold mb-4 flex items-center">
+                    <i class="fas fa-info-circle text-blue-500 mr-2"></i>
+                    关于
+                </h3>
+                
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm">
+                    <!-- 版本信息 -->
+                    <div class="setting-item p-4 border-b border-gray-100">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-gray-700 font-medium">版本</span>
+                                <div class="text-xs text-gray-500">当前版本信息</div>
+                            </div>
+                            <span class="text-gray-500 text-sm">v2.1.0</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 检查更新 -->
+                    <div class="setting-item p-4 border-b border-gray-100">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-gray-700 font-medium">检查更新</span>
+                                <div class="text-xs text-gray-500">查看是否有新版本</div>
+                            </div>
+                            <i class="fas fa-chevron-right text-gray-400"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- 帮助与反馈 -->
+                    <div class="setting-item p-4 border-b border-gray-100">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-gray-700 font-medium">帮助与反馈</span>
+                                <div class="text-xs text-gray-500">获取帮助或提交反馈</div>
+                            </div>
+                            <i class="fas fa-chevron-right text-gray-400"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- 隐私政策 -->
+                    <div class="setting-item p-4 border-b border-gray-100">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-gray-700 font-medium">隐私政策</span>
+                                <div class="text-xs text-gray-500">查看隐私条款</div>
+                            </div>
+                            <i class="fas fa-chevron-right text-gray-400"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- 给我们评分 -->
+                    <div class="setting-item p-4">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-gray-700 font-medium">给我们评分</span>
+                                <div class="text-xs text-gray-500">在 App Store 给予评价</div>
+                            </div>
+                            <div class="flex items-center space-x-1">
+                                <i class="fas fa-star text-yellow-400 text-sm"></i>
+                                <i class="fas fa-star text-yellow-400 text-sm"></i>
+                                <i class="fas fa-star text-yellow-400 text-sm"></i>
+                                <i class="fas fa-star text-yellow-400 text-sm"></i>
+                                <i class="fas fa-star text-yellow-400 text-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 版权信息 -->
+            <div class="version-info rounded-2xl p-4 text-center">
+                <div class="text-gray-500 text-sm mb-2">
+                    <i class="fas fa-tomato text-red-500 mr-2"></i>
+                    番茄时钟 Pro
+                </div>
+                <div class="text-gray-400 text-xs">
+                    © 2024 专注时光. 保留所有权利.
+                </div>
+                <div class="text-gray-400 text-xs mt-1">
+                    用心打造的专注工具
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部导航栏 -->
+    <div class="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200">
+        <div class="flex justify-around py-2">
+            <!-- Timer -->
+            <button class="flex flex-col items-center py-3 px-4">
+                <i class="fas fa-clock text-gray-400 text-xl mb-1"></i>
+                <span class="text-gray-400 text-xs">计时器</span>
+            </button>
+            
+            <!-- Tasks -->
+            <button class="flex flex-col items-center py-3 px-4">
+                <i class="fas fa-tasks text-gray-400 text-xl mb-1"></i>
+                <span class="text-gray-400 text-xs">任务</span>
+            </button>
+            
+            <!-- Stats -->
+            <button class="flex flex-col items-center py-3 px-4">
+                <i class="fas fa-chart-bar text-gray-400 text-xl mb-1"></i>
+                <span class="text-gray-400 text-xs">统计</span>
+            </button>
+            
+            <!-- Settings -->
+            <button class="flex flex-col items-center py-3 px-4">
+                <i class="fas fa-cog text-indigo-500 text-xl mb-1"></i>
+                <span class="text-indigo-500 text-xs font-medium">设置</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 切换开关交互
+        document.querySelectorAll('.toggle-switch').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                this.classList.toggle('active');
+            });
+        });
+
+        // 主题色选择交互
+        document.querySelectorAll('.theme-color').forEach(color => {
+            color.addEventListener('click', function() {
+                document.querySelectorAll('.theme-color').forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+    </script>
+</body>
+</html> 

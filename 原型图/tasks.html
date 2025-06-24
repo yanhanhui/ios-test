@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>番茄时钟 - 任务</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 任务卡片阴影效果 */
+        .task-card {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .task-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* 优先级颜色 */
+        .priority-high { border-left: 4px solid #ef4444; }
+        .priority-medium { border-left: 4px solid #f59e0b; }
+        .priority-low { border-left: 4px solid #10b981; }
+        
+        /* 状态栏样式 */
+        .status-bar {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        }
+        
+        /* 滚动区域 */
+        .scroll-area {
+            height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+        
+        /* 浮动添加按钮 */
+        .fab {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            z-index: 50;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 overflow-hidden">
+    <!-- iOS 状态栏 -->
+    <div class="status-bar text-white px-4 py-2 flex justify-between items-center text-sm font-medium">
+        <div class="flex items-center space-x-1">
+            <span>9:41</span>
+        </div>
+        <div class="flex items-center space-x-1">
+            <i class="fas fa-signal text-xs"></i>
+            <i class="fas fa-wifi text-xs"></i>
+            <i class="fas fa-battery-three-quarters text-xs"></i>
+        </div>
+    </div>
+
+    <!-- 主要内容区域 -->
+    <div class="min-h-screen bg-gray-50">
+        <!-- 顶部导航 -->
+        <div class="bg-white shadow-sm pt-6 pb-4 px-6">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-gray-800 text-2xl font-bold">我的任务</h1>
+                <button class="text-gray-600 text-lg">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            
+            <!-- 进度统计 -->
+            <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-4">
+                <div class="flex justify-between items-center text-white">
+                    <div>
+                        <div class="text-2xl font-bold">6/12</div>
+                        <div class="text-sm opacity-90">今日完成</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-lg font-semibold">50%</div>
+                        <div class="text-sm opacity-90">完成率</div>
+                    </div>
+                    <div class="w-16 h-16 relative">
+                        <svg class="w-16 h-16 transform -rotate-90">
+                            <circle cx="32" cy="32" r="28" stroke="rgba(255,255,255,0.3)" stroke-width="4" fill="transparent"/>
+                            <circle cx="32" cy="32" r="28" stroke="white" stroke-width="4" fill="transparent"
+                                    stroke-dasharray="88 88" stroke-linecap="round"/>
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <i class="fas fa-tasks text-white text-lg"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 任务分类标签 -->
+        <div class="px-6 py-4">
+            <div class="flex space-x-3 overflow-x-auto">
+                <button class="bg-indigo-500 text-white px-4 py-2 rounded-full text-sm whitespace-nowrap">
+                    全部 (12)
+                </button>
+                <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded-full text-sm whitespace-nowrap">
+                    待完成 (6)
+                </button>
+                <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded-full text-sm whitespace-nowrap">
+                    已完成 (6)
+                </button>
+                <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded-full text-sm whitespace-nowrap">
+                    高优先级 (3)
+                </button>
+            </div>
+        </div>
+
+        <!-- 任务列表 -->
+        <div class="scroll-area px-6 pb-6">
+            <!-- 今日任务 -->
+            <div class="mb-6">
+                <h3 class="text-gray-700 font-semibold mb-3 flex items-center">
+                    <i class="fas fa-calendar-day text-indigo-500 mr-2"></i>
+                    今日任务
+                </h3>
+                
+                <!-- 任务卡片 1 -->
+                <div class="task-card priority-high bg-white rounded-2xl p-4 mb-3">
+                    <div class="flex items-start justify-between">
+                        <div class="flex items-start space-x-3 flex-1">
+                            <button class="mt-1">
+                                <i class="far fa-circle text-gray-400 text-lg"></i>
+                            </button>
+                            <div class="flex-1">
+                                <h4 class="text-gray-800 font-medium mb-1">完成项目设计方案</h4>
+                                <p class="text-gray-500 text-sm mb-2">需要完成UI设计和交互原型</p>
+                                <div class="flex items-center space-x-4 text-xs text-gray-400">
+                                    <span class="flex items-center">
+                                        <i class="fas fa-clock mr-1"></i>
+                                        预计 3 番茄钟
+                                    </span>
+                                    <span class="flex items-center">
+                                        <i class="fas fa-flag mr-1 text-red-500"></i>
+                                        高优先级
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="text-gray-400 ml-2">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 任务卡片 2 -->
+                <div class="task-card priority-medium bg-white rounded-2xl p-4 mb-3">
+                    <div class="flex items-start justify-between">
+                        <div class="flex items-start space-x-3 flex-1">
+                            <button class="mt-1">
+                                <i class="fas fa-check-circle text-green-500 text-lg"></i>
+                            </button>
+                            <div class="flex-1">
+                                <h4 class="text-gray-400 font-medium mb-1 line-through">回复客户邮件</h4>
+                                <p class="text-gray-400 text-sm mb-2 line-through">处理今日待回复的邮件</p>
+                                <div class="flex items-center space-x-4 text-xs text-gray-400">
+                                    <span class="flex items-center">
+                                        <i class="fas fa-check mr-1 text-green-500"></i>
+                                        已完成 1 番茄钟
+                                    </span>
+                                    <span class="flex items-center">
+                                        <i class="fas fa-flag mr-1 text-yellow-500"></i>
+                                        中优先级
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="text-gray-400 ml-2">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 任务卡片 3 -->
+                <div class="task-card priority-low bg-white rounded-2xl p-4 mb-3">
+                    <div class="flex items-start justify-between">
+                        <div class="flex items-start space-x-3 flex-1">
+                            <button class="mt-1">
+                                <i class="far fa-circle text-gray-400 text-lg"></i>
+                            </button>
+                            <div class="flex-1">
+                                <h4 class="text-gray-800 font-medium mb-1">学习 SwiftUI 新特性</h4>
+                                <p class="text-gray-500 text-sm mb-2">研究 iOS 17 的新组件和API</p>
+                                <div class="flex items-center space-x-4 text-xs text-gray-400">
+                                    <span class="flex items-center">
+                                        <i class="fas fa-clock mr-1"></i>
+                                        预计 2 番茄钟
+                                    </span>
+                                    <span class="flex items-center">
+                                        <i class="fas fa-flag mr-1 text-green-500"></i>
+                                        低优先级
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="text-gray-400 ml-2">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 明日计划 -->
+            <div class="mb-6">
+                <h3 class="text-gray-700 font-semibold mb-3 flex items-center">
+                    <i class="fas fa-calendar-plus text-purple-500 mr-2"></i>
+                    明日计划
+                </h3>
+                
+                <div class="task-card priority-high bg-white rounded-2xl p-4 mb-3">
+                    <div class="flex items-start justify-between">
+                        <div class="flex items-start space-x-3 flex-1">
+                            <button class="mt-1">
+                                <i class="far fa-circle text-gray-400 text-lg"></i>
+                            </button>
+                            <div class="flex-1">
+                                <h4 class="text-gray-800 font-medium mb-1">团队会议准备</h4>
+                                <p class="text-gray-500 text-sm mb-2">准备项目进度汇报材料</p>
+                                <div class="flex items-center space-x-4 text-xs text-gray-400">
+                                    <span class="flex items-center">
+                                        <i class="fas fa-clock mr-1"></i>
+                                        预计 1 番茄钟
+                                    </span>
+                                    <span class="flex items-center">
+                                        <i class="fas fa-flag mr-1 text-red-500"></i>
+                                        高优先级
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="text-gray-400 ml-2">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 浮动添加按钮 -->
+        <button class="fab bg-indigo-500 hover:bg-indigo-600 text-white w-14 h-14 rounded-full flex items-center justify-center">
+            <i class="fas fa-plus text-xl"></i>
+        </button>
+    </div>
+
+    <!-- 底部导航栏 -->
+    <div class="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200">
+        <div class="flex justify-around py-2">
+            <!-- Timer -->
+            <button class="flex flex-col items-center py-3 px-4">
+                <i class="fas fa-clock text-gray-400 text-xl mb-1"></i>
+                <span class="text-gray-400 text-xs">计时器</span>
+            </button>
+            
+            <!-- Tasks -->
+            <button class="flex flex-col items-center py-3 px-4">
+                <i class="fas fa-tasks text-indigo-500 text-xl mb-1"></i>
+                <span class="text-indigo-500 text-xs font-medium">任务</span>
+            </button>
+            
+            <!-- Stats -->
+            <button class="flex flex-col items-center py-3 px-4">
+                <i class="fas fa-chart-bar text-gray-400 text-xl mb-1"></i>
+                <span class="text-gray-400 text-xs">统计</span>
+            </button>
+            
+            <!-- Settings -->
+            <button class="flex flex-col items-center py-3 px-4">
+                <i class="fas fa-cog text-gray-400 text-xl mb-1"></i>
+                <span class="text-gray-400 text-xs">设置</span>
+            </button>
+        </div>
+    </div>
+</body>
+</html> 

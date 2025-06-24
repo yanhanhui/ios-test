@@ -1,0 +1,22 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+enum PomodoroState {
+    case work       // 工作状态
+    case shortBreak // 短休息
+    case longBreak  // 长休息
+    case idle       // 空闲状态
+}
+
+class PomodoroTimer: ObservableObject {
+    @Published var timeRemaining: Int
+    @Published var currentState: PomodoroState
+    @Published var isRunning: Bool
+    @Published var completedPomodoros: Int
+    
+    // 计时器逻辑
+    // 状态切换逻辑
+    // 时间管理
+}

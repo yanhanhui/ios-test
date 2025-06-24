@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>番茄时钟 - 统计</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 状态栏样式 */
+        .status-bar {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        
+        /* 统计卡片 */
+        .stat-card {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* 进度条动画 */
+        .progress-bar {
+            transition: width 1s ease-in-out;
+        }
+        
+        /* 图表样式 */
+        .chart-container {
+            height: 200px;
+            position: relative;
+        }
+        
+        .bar-chart {
+            display: flex;
+            align-items: end;
+            height: 100%;
+            padding: 20px 0;
+            gap: 8px;
+        }
+        
+        .bar {
+            background: linear-gradient(to top, #10b981, #34d399);
+            border-radius: 4px 4px 0 0;
+            flex: 1;
+            min-height: 10px;
+            position: relative;
+            animation: growUp 1s ease-out;
+        }
+        
+        @keyframes growUp {
+            from { height: 0; }
+            to { height: var(--height); }
+        }
+        
+        .bar::after {
+            content: attr(data-value);
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+        
+        /* 成就徽章 */
+        .achievement-badge {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3);
+        }
+        
+        .achievement-badge.locked {
+            background: #e5e7eb;
+            box-shadow: none;
+        }
+        
+        /* 滚动区域 */
+        .scroll-area {
+            height: calc(100vh - 160px);
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 overflow-hidden">
+    <!-- iOS 状态栏 -->
+    <div class="status-bar text-white px-4 py-2 flex justify-between items-center text-sm font-medium">
+        <div class="flex items-center space-x-1">
+            <span>9:41</span>
+        </div>
+        <div class="flex items-center space-x-1">
+            <i class="fas fa-signal text-xs"></i>
+            <i class="fas fa-wifi text-xs"></i>
+            <i class="fas fa-battery-three-quarters text-xs"></i>
+        </div>
+    </div>
+
+    <!-- 主要内容区域 -->
+    <div class="min-h-screen bg-gray-50">
+        <!-- 顶部导航 -->
+        <div class="bg-white shadow-sm pt-6 pb-4 px-6">
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-gray-800 text-2xl font-bold">数据统计</h1>
+                <button class="text-gray-600 text-lg">
+                    <i class="fas fa-download"></i>
+                </button>
+            </div>
+            
+            <!-- 时间范围选择 -->
+            <div class="flex space-x-2">
+                <button class="bg-green-500 text-white px-4 py-2 rounded-full text-sm">今日</button>
+                <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded-full text-sm">本周</button>
+                <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded-full text-sm">本月</button>
+                <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded-full text-sm">年度</button>
+            </div>
+        </div>
+
+        <div class="scroll-area px-6 pb-6">
+            <!-- 今日概览 -->
+            <div class="mb-6">
+                <h3 class="text-gray-700 font-semibold mb-4 flex items-center">
+                    <i class="fas fa-calendar-day text-green-500 mr-2"></i>
+                    今日概览
+                </h3>
+                
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <!-- 完成番茄钟 -->
+                    <div class="stat-card bg-gradient-to-br from-red-500 to-pink-500 rounded-2xl p-4 text-white">
+                        <div class="flex items-center justify-between mb-2">
+                            <i class="fas fa-tomato text-2xl opacity-80"></i>
+                            <span class="text-xs opacity-80">番茄钟</span>
+                        </div>
+                        <div class="text-2xl font-bold">8</div>
+                        <div class="text-xs opacity-90">已完成</div>
+                    </div>
+                    
+                    <!-- 专注时间 -->
+                    <div class="stat-card bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl p-4 text-white">
+                        <div class="flex items-center justify-between mb-2">
+                            <i class="fas fa-clock text-2xl opacity-80"></i>
+                            <span class="text-xs opacity-80">专注</span>
+                        </div>
+                        <div class="text-2xl font-bold">3.2h</div>
+                        <div class="text-xs opacity-90">工作时间</div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- 完成任务 -->
+                    <div class="stat-card bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl p-4 text-white">
+                        <div class="flex items-center justify-between mb-2">
+                            <i class="fas fa-check-circle text-2xl opacity-80"></i>
+                            <span class="text-xs opacity-80">任务</span>
+                        </div>
+                        <div class="text-2xl font-bold">6</div>
+                        <div class="text-xs opacity-90">已完成</div>
+                    </div>
+                    
+                    <!-- 效率指数 -->
+                    <div class="stat-card bg-gradient-to-br from-yellow-500 to-orange-500 rounded-2xl p-4 text-white">
+                        <div class="flex items-center justify-between mb-2">
+                            <i class="fas fa-tachometer-alt text-2xl opacity-80"></i>
+                            <span class="text-xs opacity-80">效率</span>
+                        </div>
+                        <div class="text-2xl font-bold">85%</div>
+                        <div class="text-xs opacity-90">完成率</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 本周趋势 -->
+            <div class="mb-6">
+                <h3 class="text-gray-700 font-semibold mb-4 flex items-center">
+                    <i class="fas fa-chart-line text-blue-500 mr-2"></i>
+                    本周趋势
+                </h3>
+                
+                <div class="stat-card bg-white rounded-2xl p-4">
+                    <div class="flex justify-between items-center mb-4">
+                        <span class="text-gray-600 text-sm">每日番茄钟完成数</span>
+                        <span class="text-green-500 text-sm font-medium">↗ +12%</span>
+                    </div>
+                    
+                    <!-- 柱状图 -->
+                    <div class="chart-container">
+                        <div class="bar-chart">
+                            <div class="bar" style="--height: 60%" data-value="3"></div>
+                            <div class="bar" style="--height: 80%" data-value="4"></div>
+                            <div class="bar" style="--height: 70%" data-value="3.5"></div>
+                            <div class="bar" style="--height: 90%" data-value="4.5"></div>
+                            <div class="bar" style="--height: 100%" data-value="5"></div>
+                            <div class="bar" style="--height: 85%" data-value="4.3"></div>
+                            <div class="bar" style="--height: 95%" data-value="4.8"></div>
+                        </div>
+                        <div class="flex justify-between text-xs text-gray-500 mt-2">
+                            <span>周一</span>
+                            <span>周二</span>
+                            <span>周三</span>
+                            <span>周四</span>
+                            <span>周五</span>
+                            <span>周六</span>
+                            <span>周日</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 专注时段分析 -->
+            <div class="mb-6">
+                <h3 class="text-gray-700 font-semibold mb-4 flex items-center">
+                    <i class="fas fa-brain text-purple-500 mr-2"></i>
+                    专注时段分析
+                </h3>
+                
+                <div class="stat-card bg-white rounded-2xl p-4">
+                    <div class="space-y-4">
+                        <!-- 上午 -->
+                        <div>
+                            <div class="flex justify-between text-sm mb-2">
+                                <span class="text-gray-600">上午 (9:00-12:00)</span>
+                                <span class="text-blue-500 font-medium">92%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-3">
+                                <div class="progress-bar bg-gradient-to-r from-blue-500 to-purple-500 h-3 rounded-full" style="width: 92%"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- 下午 -->
+                        <div>
+                            <div class="flex justify-between text-sm mb-2">
+                                <span class="text-gray-600">下午 (14:00-17:00)</span>
+                                <span class="text-green-500 font-medium">78%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-3">
+                                <div class="progress-bar bg-gradient-to-r from-green-500 to-emerald-500 h-3 rounded-full" style="width: 78%"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- 晚上 -->
+                        <div>
+                            <div class="flex justify-between text-sm mb-2">
+                                <span class="text-gray-600">晚上 (19:00-22:00)</span>
+                                <span class="text-orange-500 font-medium">65%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-3">
+                                <div class="progress-bar bg-gradient-to-r from-orange-500 to-red-500 h-3 rounded-full" style="width: 65%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 p-3 bg-blue-50 rounded-xl">
+                        <div class="flex items-center text-blue-700">
+                            <i class="fas fa-lightbulb mr-2"></i>
+                            <span class="text-sm font-medium">建议：上午是您的最佳专注时段</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 成就系统 -->
+            <div class="mb-6">
+                <h3 class="text-gray-700 font-semibold mb-4 flex items-center">
+                    <i class="fas fa-trophy text-yellow-500 mr-2"></i>
+                    成就徽章
+                </h3>
+                
+                <div class="grid grid-cols-3 gap-4">
+                    <!-- 连续专注 -->
+                    <div class="text-center">
+                        <div class="achievement-badge w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-2">
+                            <i class="fas fa-fire text-white text-xl"></i>
+                        </div>
+                        <div class="text-xs font-medium text-gray-700">连续7天</div>
+                        <div class="text-xs text-gray-500">专注达人</div>
+                    </div>
+                    
+                    <!-- 早起专注 -->
+                    <div class="text-center">
+                        <div class="achievement-badge w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-2">
+                            <i class="fas fa-sun text-white text-xl"></i>
+                        </div>
+                        <div class="text-xs font-medium text-gray-700">早起鸟</div>
+                        <div class="text-xs text-gray-500">早晨专注</div>
+                    </div>
+                    
+                    <!-- 任务完成 -->
+                    <div class="text-center">
+                        <div class="achievement-badge w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-2">
+                            <i class="fas fa-star text-white text-xl"></i>
+                        </div>
+                        <div class="text-xs font-medium text-gray-700">任务大师</div>
+                        <div class="text-xs text-gray-500">100个任务</div>
+                    </div>
+                    
+                    <!-- 未解锁成就 -->
+                    <div class="text-center">
+                        <div class="achievement-badge locked w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-2">
+                            <i class="fas fa-lock text-gray-400 text-xl"></i>
+                        </div>
+                        <div class="text-xs font-medium text-gray-400">专注新手</div>
+                        <div class="text-xs text-gray-400">50个番茄钟</div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="achievement-badge locked w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-2">
+                            <i class="fas fa-medal text-gray-400 text-xl"></i>
+                        </div>
+                        <div class="text-xs font-medium text-gray-400">效率王者</div>
+                        <div class="text-xs text-gray-400">95%完成率</div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <div class="achievement-badge locked w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-2">
+                            <i class="fas fa-crown text-gray-400 text-xl"></i>
+                        </div>
+                        <div class="text-xs font-medium text-gray-400">时间大师</div>
+                        <div class="text-xs text-gray-400">连续30天</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 月度总结 -->
+            <div class="mb-6">
+                <h3 class="text-gray-700 font-semibold mb-4 flex items-center">
+                    <i class="fas fa-calendar-alt text-indigo-500 mr-2"></i>
+                    本月总结
+                </h3>
+                
+                <div class="stat-card bg-white rounded-2xl p-4">
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-red-500">126</div>
+                            <div class="text-sm text-gray-600">番茄钟总数</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-blue-500">52.5h</div>
+                            <div class="text-sm text-gray-600">专注总时长</div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-green-500">89</div>
+                            <div class="text-sm text-gray-600">完成任务数</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-purple-500">23</div>
+                            <div class="text-sm text-gray-600">活跃天数</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 text-center">
+                        <span class="text-sm text-gray-600">比上月提升 </span>
+                        <span class="text-green-500 font-semibold">+18%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部导航栏 -->
+    <div class="absolute bottom-0 left-0 right-0 bg-white border-t border-gray-200">
+        <div class="flex justify-around py-2">
+            <!-- Timer -->
+            <button class="flex flex-col items-center py-3 px-4">
+                <i class="fas fa-clock text-gray-400 text-xl mb-1"></i>
+                <span class="text-gray-400 text-xs">计时器</span>
+            </button>
+            
+            <!-- Tasks -->
+            <button class="flex flex-col items-center py-3 px-4">
+                <i class="fas fa-tasks text-gray-400 text-xl mb-1"></i>
+                <span class="text-gray-400 text-xs">任务</span>
+            </button>
+            
+            <!-- Stats -->
+            <button class="flex flex-col items-center py-3 px-4">
+                <i class="fas fa-chart-bar text-green-500 text-xl mb-1"></i>
+                <span class="text-green-500 text-xs font-medium">统计</span>
+            </button>
+            
+            <!-- Settings -->
+            <button class="flex flex-col items-center py-3 px-4">
+                <i class="fas fa-cog text-gray-400 text-xl mb-1"></i>
+                <span class="text-gray-400 text-xs">设置</span>
+            </button>
+        </div>
+    </div>
+</body>
+</html> 

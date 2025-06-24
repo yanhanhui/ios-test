@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>番茄时钟 App 原型设计</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://kit.fontawesome.com/your-kit-id.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* iPhone 15 Pro 尺寸: 393x852 */
+        .iphone-frame {
+            width: 393px;
+            height: 852px;
+            border-radius: 47px;
+            border: 8px solid #1f2937;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            background: #000;
+            margin: 20px;
+        }
+        
+        .screen-content {
+            width: 100%;
+            height: 100%;
+            border-radius: 39px;
+            overflow: hidden;
+        }
+        
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .prototype-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(393px, 1fr));
+            gap: 40px;
+            justify-items: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .prototype-title {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .frame-wrapper {
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gray-100 min-h-screen">
+        <header class="bg-white shadow-md py-6">
+            <div class="container mx-auto px-4">
+                <h1 class="text-3xl font-bold text-gray-800 text-center">
+                    <i class="fas fa-tomato text-red-500 mr-3"></i>
+                    番茄时钟 App 高保真原型设计
+                </h1>
+                <p class="text-gray-600 text-center mt-2">基于 iOS 设计规范的完整界面原型</p>
+            </div>
+        </header>
+
+        <div class="prototype-container">
+            <!-- 主界面 Timer -->
+            <div class="frame-wrapper">
+                <div class="prototype-title">主界面 - 计时器</div>
+                <div class="iphone-frame">
+                    <div class="screen-content">
+                        <iframe src="timer.html"></iframe>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 任务界面 Tasks -->
+            <div class="frame-wrapper">
+                <div class="prototype-title">任务界面 - 任务管理</div>
+                <div class="iphone-frame">
+                    <div class="screen-content">
+                        <iframe src="tasks.html"></iframe>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 统计界面 Stats -->
+            <div class="frame-wrapper">
+                <div class="prototype-title">统计界面 - 数据分析</div>
+                <div class="iphone-frame">
+                    <div class="screen-content">
+                        <iframe src="stats.html"></iframe>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 设置界面 Settings -->
+            <div class="frame-wrapper">
+                <div class="prototype-title">设置界面 - 个性化配置</div>
+                <div class="iphone-frame">
+                    <div class="screen-content">
+                        <iframe src="settings.html"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="bg-white shadow-md py-6 mt-8">
+            <div class="container mx-auto px-4 text-center">
+                <p class="text-gray-600">
+                    <i class="fas fa-mobile-alt mr-2"></i>
+                    iPhone 15 Pro 尺寸 (393x852) | iOS 设计规范 | 完整交互原型
+                </p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html> 
